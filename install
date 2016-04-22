@@ -43,7 +43,7 @@ OYSTERC="${PREFIX_DEFAULT}/.oysterc"
 }
 
 # write initial setting for .oystrc
-echo "> please add the following settings for oyster-modules to the top of your $OYST_PATH/.oysterc file:"
+echo "> please add the following settings for oyster-modules to the top of your ${prefix}/.oysterc file:"
 {
     echo
     echo
