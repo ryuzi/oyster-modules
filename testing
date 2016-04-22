@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+UNITTEST_COUNT=0
+UNITTEST_ERRORS=()
+
+# assert "$LINENO" <test expression>
+assert() {
+    [ $# -gt 1 ] || die "assert requires at least two parameters."
+
+    local line_number
+    line_number=$1
+    shift
+
+    _store_errors() {
+        [ -z "${1}" ] && die "assert.log requires error-message"
+        UNITTEST_ERRORS[$UNITTEST_COUNT]="${1}"
+        UNITTEST_COUNT=$((UNITTEST_COUNT + 1))
+    }
+
+    if [ "$@" ] 2>/dev/null; then
+        echo -n "."
+    else
+        echo -n "F"
+        _store_errors "${FUNCNAME[1]}(${SELF} at line ${line_number}): test expression $*"
+    fi
+}
+
+# run unittest
+run() {
+    set +x
+    local func target test_count
+    local error error_count error_message
+    target=()
+    while read -r LINE; do
+        func="${LINE// /}"
+        func="${func%%(*}"
+        target+=("${func}")
+    done < <(grep "^[^_].\+() *{$" "$APP_PATH/$SELF")
+    echo
+
+    # do test
+    for func in "${target[@]}"; do
+        echo -n "${func}: "
+        "${func}"
+        echo
+    done
+    echo
+
+    # result
+    if [ "${#UNITTEST_ERRORS[@]}" -ne 0 ]; then
+        echo "-----"
+        echo "Fail:"
+        for error in "${UNITTEST_ERRORS[@]}"; do
+            echo "${error}"
+        done
+        echo
+    fi
+
+    echo "-----"
+    test_count=${#target[@]}
+    echo -n "Ran $test_count "
+    [ "$test_count" -eq 1 ] && echo "test." || echo "tests."
+    echo
+
+    error_count=${#UNITTEST_ERRORS[@]}
+    if [ "${error_count}" -ne 0 ]; then
+        error_message="errors ="
+        [ "${error_count}" -eq 1 ] && error_message="${error_message/errors/error}"
+        die "${error_message} ${error_count}"
+    fi
+}
