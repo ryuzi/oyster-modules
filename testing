@@ -21,13 +21,12 @@ assert() {
         echo -n "."
     else
         echo -n "F"
-        _store_errors "${FUNCNAME[1]}(${SELF} at line ${line_number}): test expression $*"
+        _store_errors "${FUNCNAME[1]}(${SELF} at line ${line_number}): test expression [ $* ]"
     fi
 }
 
 # run unittest
 run() {
-    set +x
     local func target test_count
     local error error_count error_message
     target=()
