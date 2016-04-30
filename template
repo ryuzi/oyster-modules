@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# template for oyster
+#
+
+# load template
+template.loader() {
+    [ -s "${1:-}" ] || return 1
+    while read -r LINE; do
+        echo "${LINE}"
+    done < "${1}"
+}
+
+# render template
+template.render() {
+    [ "$#" -gt 1 ] || return 1
+
+    local context
+    context="$1"
+    shift
+
+    for key_value in "$@"; do
+        local key="${key_value%=*}"
+        local value="${key_value#*=}"
+        context="${context//\{\{ ${key} \}\}/$value}"
+    done
+
+    echo "$context"
+}
+

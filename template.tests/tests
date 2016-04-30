@@ -1,0 +1,51 @@
+#!/usr/bin/env oyster
+import testing
+
+source ../template
+
+tests.template.render() {
+    local context params result
+
+    context="{{ place }} is {{ weather }} today."
+    params=(
+        place="Tokyo"
+        weather="sunny"
+    )
+
+    result=$(template.render)
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.render "${context}")
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.render "${context}" "${params[@]}")
+    assert $LINENO "$?" = 0
+    assert $LINENO  "${result}" = "Tokyo is sunny today."
+
+    params=(
+        place="Tokyo"
+        weather="rain"
+    )
+    context=$(template.loader "templates/yesterday")
+    result=$(template.render "${context}" "${params[@]}")
+    assert $LINENO "$?" = 0
+    assert $LINENO  "${result}" = "It was rain yesterday in Tokyo"
+
+}
+
+tests.template.loader() {
+    local params result
+    result=$(template.loader)
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.loader "file/not/exists")
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.loader "templates/yesterday")
+    assert $LINENO "$?" = 0
+    assert $LINENO  "${result}" = "It was {{ weather }} yesterday in {{ place }}"
+}

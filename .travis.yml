@@ -9,9 +9,18 @@ addons:
     packages:
       - shellcheck
 
+install:
+  - sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster/master/install)"
+  - cd $HOME; git clone https://github.com/ryuzi/oyster-modules.git .oyster-modules; cd -
+  - export OYST_PATH=/home/travis/.oyster
+  - export OYST_MODULE_PATH=/home/travis/.oyster-modules
+  - export PATH=$OYST_PATH:$PATH
+
 script:
   - shellcheck install
   - shellcheck testing
+  - shellcheck template
+  - cd template.tests; ./tests run
 
 matrix:
   fast_finish: true
