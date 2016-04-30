@@ -67,4 +67,6 @@ run() {
         [ "${error_count}" -eq 1 ] && error_message="${error_message/errors/error}"
         die "${error_message} ${error_count}"
     fi
+
+    ok "test complete."
 }
