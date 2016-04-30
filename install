@@ -3,7 +3,7 @@ set -eu
 
 # oyster-modules setup script
 
-REPOSITORY="git@github.com:ryuzi/oyster-modules.git"
+REPOSITORY="https://github.com/ryuzi/oyster-modules.git"
 PREFIX_DEFAULT="${HOME:?}"
 OYSTERC="${PREFIX_DEFAULT}/.oysterc"
 
@@ -14,11 +14,8 @@ OYSTERC="${PREFIX_DEFAULT}/.oysterc"
 
 # check installation directory
 {
-    echo -n "> install directory[ $PREFIX_DEFAULT ]: "
-    read -r INPUT
-    prefix="${INPUT:-$PREFIX_DEFAULT}"
-    if [ -e "${prefix}/.oyster-modules" ]; then
-        echo "> '${prefix}/.oyster-modules' already exists!"
+    if [ -e "${PREFIX_DEFAULT}/.oyster-modules" ]; then
+        echo "> '${PREFIX_DEFAULT}/.oyster-modules' already exists!"
         echo
         exit 1
     fi
@@ -37,17 +34,17 @@ OYSTERC="${PREFIX_DEFAULT}/.oysterc"
 
 # download oyster-modules
 {
-    cd "${prefix}"
+    cd "${PREFIX_DEFAULT}"
     git clone "${REPOSITORY}" .oyster-modules
     cd -
 }
 
 # write initial setting for .oystrc
-echo "> please add the following settings for oyster-modules to the top of your ${prefix}/.oysterc file:"
+echo "> please add the following settings for oyster-modules to the top of your ${PREFIX_DEFAULT}/.oysterc file:"
 {
     echo
     echo
-    echo "export OYST_MODULE_PATH=${prefix}/.oyster-modules"
+    echo "export OYST_MODULE_PATH=${PREFIX_DEFAULT}/.oyster-modules"
     echo
     echo
 }
