@@ -21,7 +21,7 @@ script:
   - shellcheck install
   - shellcheck testing
   - shellcheck template
-  - cd template.tests; ./tests run
+  - cd tests; ./template run; cd -
 
 matrix:
   fast_finish: true

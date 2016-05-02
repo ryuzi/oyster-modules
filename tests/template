@@ -1,0 +1,91 @@
+#!/usr/bin/env oyster
+import testing
+
+source ../template
+
+setup() {
+
+    template_file=$(mktemp "template_file.XXXXX")
+    empty_file=$(mktemp "empty_file.XXXXX")
+
+    template_text="$(cat <<- TEMPLATE
+	I got up {{ time }} ago.
+	We are going to tour {{ place }} in the morning.
+	TEMPLATE
+    )"
+    answer="$(cat <<- RESULT
+	I got up ten minutes ago.
+	We are going to tour Kamakura in the morning.
+	RESULT
+    )"
+
+    echo "${template_text}" > "${template_file}"
+
+}
+
+teardown() {
+
+    rm "${template_file}"
+    rm "${empty_file}"
+
+}
+
+tests.template.loader() {
+
+    local params result
+
+    result=$(template.loader)
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.loader "file/not/exists")
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.loader "${empty_file}")
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.loader "${template_file}")
+    assert $LINENO "$?" = 0
+    assert $LINENO "${result}" != ""
+    assert $LINENO  "${result}" = "${template_text}"
+
+}
+
+tests.template.render() {
+
+    local context params result
+
+    context=$(template.loader "${template_file}")
+    params=(
+        place="Tokyo"
+        time="ten minutes"
+    )
+
+    result=$(template.render)
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.render "${template_text}")
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.render "${params[@]}")
+    assert $LINENO "$?" = 1
+    assert $LINENO "${result}" = ""
+
+    result=$(template.render "${context}" "${params[@]}")
+    assert $LINENO "$?" = 0
+    assert $LINENO "${result}" != "${answer}"
+
+    params=(
+        place="Kamakura"
+        time="ten minutes"
+    )
+    result=$(template.render "${context}" "${params[@]}")
+    assert $LINENO "$?" = 0
+    assert $LINENO  "${result}" = "${answer}"
+
+}
+
