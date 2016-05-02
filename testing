@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+setup() { :; }
+teardown() { :; }
+trap teardown INT TERM
 
 UNITTEST_COUNT=0
 UNITTEST_ERRORS=()
@@ -33,16 +36,20 @@ run() {
     while read -r LINE; do
         func="${LINE// /}"
         func="${func%%(*}"
-        target+=("${func}")
+        if [ "${func}" != "setup" ] && [ "${func}" != "teardown" ]; then
+            target+=("${func}")
+        fi
     done < <(grep "^[^_].\+() *{$" "$APP_PATH/$SELF")
     echo
 
     # do test
+    setup
     for func in "${target[@]}"; do
         echo -n "${func}: "
         "${func}"
         echo
     done
+    teardown
     echo
 
     # result

@@ -13,7 +13,7 @@
 
 ### Basic Installation
 
-Testing Module is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`.
+Oyster Module is installed by running one of the following commands in your terminal. You can install this via the command-line with either `curl` or `wget`.
 Then reloading .oystrc file.
 
 ```shell
@@ -64,8 +64,8 @@ Tokyo is sunny today.
 ### Module List
 
 * template - template module
-    * template.loader
-    * template.render
+    * template.loader <template-file>
+    * template.render <template-context> <key-value[s]>
 
 
 ## LICENSE
