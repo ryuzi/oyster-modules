@@ -5,18 +5,22 @@
 
 # load template
 template.loader() {
+
     [ -s "${1:-}" ] || return 1
-    while read -r LINE; do
-        echo "${LINE}"
-    done < "${1}"
+    cat "${1}"
+
 }
 
 # render template
 template.render() {
+
     [ "$#" -gt 1 ] || return 1
 
     local context
     context="$1"
+
+    [ "${context}" = "${context//\{\{/}" ] && return 1
+
     shift
 
     for key_value in "$@"; do
@@ -26,5 +30,6 @@ template.render() {
     done
 
     echo "$context"
+
 }
 
