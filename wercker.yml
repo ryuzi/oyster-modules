@@ -16,4 +16,5 @@ build:
                 export PATH=$OYST_PATH:$PATH
                 cd tests
                 ./template run
+                ./utils run
 
