@@ -12,7 +12,6 @@ addons:
 install:
   - sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster/master/install)"
   - sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster-modules/master/install)"
-  - cd $HOME; git clone https://github.com/ryuzi/oyster-modules.git .oyster-modules; cd -
   - export OYST_PATH=/home/travis/.oyster
   - export OYST_MODULE_PATH=/home/travis/.oyster-modules
   - export PATH=$OYST_PATH:$PATH

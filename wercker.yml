@@ -1,0 +1,19 @@
+box: wercker/default
+build:
+    steps:
+        - script:
+            name: install oyster
+            code: |-
+                sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster/master/install)"
+                sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster-modules/master/install)"
+        - shellcheck:
+            files: install testing template
+        - script:
+            name: run test
+            code: |-
+                export OYST_PATH=$HOME/.oyster
+                export OYST_MODULE_PATH=$HOME/.oyster-modules
+                export PATH=$OYST_PATH:$PATH
+                cd tests
+                ./template run
+
