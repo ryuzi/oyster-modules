@@ -23,15 +23,16 @@ is_pipe() {
 # Strip whitespace, tab, new-line, carriage-return
 trim() {
     local string
-	is_pipe && string=$(cat -) || string="$*"
+    string="$*"
+    is_empty "$string" && read -r string < /dev/stdin
     echo "$string" | tr -d '\r\n' | sed -E $'s/^[ \t]*//g;s/[ \t]*$//g'
 }
 
 # replace variable
 replace() {
 	local variable search replace
-	if is_pipe; then
-        variable=$(cat -)
+	if [ $# -eq 2 ]; then
+        read -r variable < /dev/stdin
         search="$1"
         replace="$2"
     else
