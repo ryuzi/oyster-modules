@@ -20,9 +20,7 @@ script:
   - shellcheck install
   - shellcheck testing
   - shellcheck template
-  - cd tests
-  - ./template run
-  - ./utils run
+  - oyster test
 
 matrix:
   fast_finish: true

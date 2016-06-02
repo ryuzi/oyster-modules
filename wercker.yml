@@ -14,7 +14,5 @@ build:
                 export OYST_PATH=$HOME/.oyster
                 export OYST_MODULE_PATH=$HOME/.oyster-modules
                 export PATH=$OYST_PATH:$PATH
-                cd tests
-                ./template run
-                ./utils run
+                oyster test
 
