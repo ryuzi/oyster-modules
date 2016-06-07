@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# check directory
+is_dir() {
+    test -d "$1"
+}
+
+# check file
+is_file() {
+    test -f "$1"
+}
+
+# check empty
+is_empty() {
+    test -z "$1"
+}
+
+# check pipe stdin
+is_pipe() {
+	test -p "/dev/stdin"
+}
+
+# Strip whitespace, tab, new-line, carriage-return
+trim() {
+    local string
+    string="$*"
+    is_empty "$string" && read -r string < /dev/stdin
+    echo "$string" | tr -d '\r\n' | sed -E $'s/^[ \t]*//g;s/[ \t]*$//g'
+}
+
+# replace variable
+replace() {
+	local variable search replace
+	if [ $# -eq 2 ]; then
+        read -r variable < /dev/stdin
+        search="$1"
+        replace="$2"
+    else
+        variable="$(eval echo \$1)"
+        search="$2"
+        replace="$3"
+    fi
+    echo "${variable/$search/$replace}"
+}
+

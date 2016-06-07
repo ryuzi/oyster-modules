@@ -1,0 +1,36 @@
+#!/usr/bin/env oyster
+import testing
+
+source ../utils
+
+# test for trim
+tests.trim() {
+    local string answer result
+    answer="Hello World."
+    string="${answer}"
+
+    result=$(trim "${string}")
+    assert $LINENO "${result}" = "${answer}"
+
+    result=$(echo "${string}" | trim)
+    assert $LINENO "${result}" = "${answer}"
+
+    string=$(echo -e " \t  ${answer} \t\r\n")
+    result=$(trim "${string}")
+    assert $LINENO "${result}" = "${answer}"
+
+    result="$(echo "${string}" | trim)"
+    assert $LINENO "${result}" = "${answer}"
+}
+
+
+tests.replace() {
+    local string result
+    string="Hello World."
+
+    result=$(replace "$string" "World" "Japan")
+    assert $LINENO "$result" = "Hello Japan."
+
+    result=$(echo "$string" | replace "World" "Japan")
+    assert $LINENO "$result" = "Hello Japan."
+}
