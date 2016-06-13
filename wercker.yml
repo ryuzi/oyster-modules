@@ -7,7 +7,7 @@ build:
                 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster/master/install)"
                 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster-modules/master/install)"
         - shellcheck:
-            files: install testing template
+            files: $(cat < MODULE_LIST)
         - script:
             name: run test
             code: |-
