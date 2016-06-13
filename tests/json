@@ -1,0 +1,57 @@
+#!/usr/bin/env oyster
+
+import testing
+
+source ../json
+
+DATA_DIR="$APP_PATH/data/json"
+
+tests.json.extract() {
+    local result answer
+    get() { json.extract "$@"; }
+
+    result=$(cat < "$DATA_DIR/1.json" | get)
+    answer=$(cat < "$DATA_DIR/1.extracted")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/1.json" | get -n "title")
+    answer=$(cat < "$DATA_DIR/1.extracted-title")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/1.json" | get -n "Abbrev")
+    answer=$(cat < "$DATA_DIR/1.extracted-Abbrev")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/1.json" | get -n "GlossDef")
+    answer=$(cat < "$DATA_DIR/1.extracted-GlossDef")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/1.json" | get -n "GlossDiv" | get -n "title")
+    answer=$(cat < "$DATA_DIR/1.extracted-GlossDiv-title")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/2.json" | get)
+    answer=$(cat < "$DATA_DIR/2.extracted")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/2.json" | get -n "menuitem")
+    answer=$(cat < "$DATA_DIR/2.extracted-menuitem")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/3.json" | get)
+    answer=$(cat < "$DATA_DIR/3.extracted")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/4.json" | get)
+    answer=$(cat < "$DATA_DIR/4.extracted")
+    assert $LINENO "$result" = "$answer"
+
+    result=$(cat < "$DATA_DIR/5.json" | get)
+    answer=$(cat < "$DATA_DIR/5.extracted")
+    assert $LINENO "$result" = "$answer"
+
+}
+
+tests.json.to_array() {
+    assert $LINENO 0 = 0
+}
