@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+#
+# JSON module for Oyster
+#
+
+json._prepare() {
+    [ $# -ne 2 ] && return 1
+
+    local json name
+    json=$(echo "${1:-}" | tr -s "[:cntrl:]" " ")
+    name="$2"
+    if [ -n "$name" ] && [[ "$json" =~ $name ]]; then
+        json="${json#*\"$name\"*: }"
+        json=$(echo "$json" | sed -E -e $'s/^ *//g;s/ *$//g')
+    fi
+    echo "$json"
+    return 0
+}
+
+json._object() {
+    [ -z "${1:-}" ] && return 1
+
+    local json_in json_out depth last name
+
+    json_in="$1"
+    last=$((${#json_in} - 1))
+    depth=0
+
+    for i in $(seq 0 $last); do
+        char="${json_in:$i:1}"
+        [ "$char" = "{" ] && (( depth++ ))
+        [ $depth -gt 0 ] && json_out+="$char"
+        [ "$char" = "}" ] && (( depth-- ))
+    done
+
+    echo "$json_out"
+    return 0
+}
+
+json._array() {
+    [ -z "${1:-}" ] && return 1
+
+    json_in="$1"
+    last=$((${#json_in} - 1))
+    depth=0
+
+    for i in $(seq 0 $last); do
+        char="${json_in:$i:1}"
+        [ "$char" = "[" ] && (( depth++ ))
+        [ $depth -gt 0 ] && json_out+="$char"
+        [ "$char" = "]" ] && (( depth-- ))
+    done
+    echo "$json_out"
+    return 0
+}
+
+json._number() {
+    [ -z "${1:-}" ] && return 1
+    echo "$1" | sed -E -e 's/[}, ].*$//'
+    return 0
+}
+
+json._string() {
+    [ -z "${1:-}" ] && return 1
+
+    json_in="$1"
+    last=$((${#json_in} - 1))
+    depth=0
+
+    for i in $(seq 0 $last); do
+        char="${json_in:$i:1}"
+        [ "$char" = '"' ] && [ "${json_in:$((i - 1)):1}" != "\\" ] && (( depth++ ))
+        [ $depth -gt 0 ] && json_out+="$char"
+        [ $(( depth % 2 )) -eq 0 ] && break
+    done
+    echo "$json_out"
+    return 0
+}
+
+# extract json value from name
+json.extract() {
+    local name file json
+    while getopts n:f: opts; do
+        case $opts in
+            n ) name="$OPTARG" ;;
+            f ) file="$OPTARG" ;;
+        esac
+    done; OPTIND=1
+
+    if [ -p /dev/stdin ]; then
+        json=$(cat -)
+    elif [ -s "$file" ]; then
+        json=$(cat "$file")
+    else
+        return 1
+    fi
+
+    json=$(json._prepare "$json" "$name")
+    case ${json:0:1} in
+        "{" ) json._object "$json" ;;
+        "[" ) json._array "$json" ;;
+        [0-9-] ) json._number "$json" ;;
+        * )   json._string "$json" ;;
+    esac
+    return 0
+}
+
+json.to_array() {
+    local json arr value
+
+    if [ -p /dev/stdin ]; then
+        json=$(cat -)
+    elif [ -n "${1:-}" ]; then
+        json="$1"
+    fi
+    [ "${json:0:1}" != "[" ] && return 1
+
+    json="${json/\[/}"
+    json="${json/\]/}"
+    json="${json//, \{/|{}"
+    IFS=\| arr=($json)
+    for value in "${arr[@]}"; do
+        echo "$value"
+    done
+    return 0
+}
