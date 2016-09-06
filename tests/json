@@ -2,7 +2,7 @@
 
 import testing
 
-source ../json
+source ../modules/json
 
 DATA_DIR="$APP_PATH/data/json"
 
