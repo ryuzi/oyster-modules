@@ -17,7 +17,9 @@ install:
   - export PATH=$OYST_PATH:$PATH
 
 script:
+  - cd modules
   - cat < MODULE_LIST | xargs shellcheck
+  - cd -
   - oyster test
 
 matrix:
