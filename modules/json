@@ -10,7 +10,7 @@ json._prepare() {
     json=$(echo "${1:-}" | tr -s "[:cntrl:]" " ")
     name="$2"
     if [ -n "$name" ] && [[ "$json" =~ $name ]]; then
-        json="${json#*\"$name\"*: }"
+        json="${json#*\"$name\"*:}"
         json=$(echo "$json" | sed -E -e $'s/^ *//g;s/ *$//g')
     fi
     echo "$json"
