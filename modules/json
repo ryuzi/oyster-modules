@@ -115,9 +115,9 @@ json.to_array() {
     fi
     [ "${json:0:1}" != "[" ] && return 1
 
-    json="${json/\[/}"
-    json="${json/\]/}"
-    json="${json//, \{/|{}"
+    json="${json#\[}"
+    json="${json%\]}"
+    json="${json//,\{/|{}"
     IFS=\| arr=($json)
     for value in "${arr[@]}"; do
         echo "$value"
