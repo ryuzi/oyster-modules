@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+# figlet module for Oyster
+#
+
+[[ $(command -v tput) ]] || return 1
+[[ $(command -v figlet) ]] || return 1
+[[ $(command -v figlist) ]] || return 1
+
+# random display [$1: words, $2-: font name]
+figlet.print.random() {
+    [ $# -lt 1 ] && return 1
+
+    local word font
+    word="$1" && shift
+    font=$(figlet.font.random "$@")
+
+    figlet -c -w "$(tput cols)" -f "${font}" "${word}"
+}
+
+# random choice figlet font
+figlet.font.random() {
+    local fonts count
+
+    if [ $# -eq 0 ]; then
+        fonts=($(figlist | sed -e '/Figlet control files in this directory:/,$d' -e '/:/d'))
+    else
+        fonts=($@)
+    fi
+
+    count=${#fonts[@]}
+    echo "${fonts[$((RANDOM % count))]}"
+}
+
