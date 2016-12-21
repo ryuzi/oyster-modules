@@ -8,6 +8,7 @@ addons:
       - debian-sid
     packages:
       - shellcheck
+      - figlet
 
 install:
   - sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster/master/install)"
