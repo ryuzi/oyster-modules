@@ -27,7 +27,7 @@ tests.figlet.print.random() {
     result=$(figlet.print.random "oyster script")
     assert $LINENO -n "${result}"
 
-    result=$(figlet.print.random "oyster script" "hollywood")
-    answer=$(figlet -c -w "$(tput cols)" -f "hollywood" "oyster script")
+    result=$(figlet.print.random "oyster script" "standard")
+    answer=$(figlet -c -w "$(tput cols)" -f "standard" "oyster script")
     assert $LINENO "${result}" == "${answer}"
 }
