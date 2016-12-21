@@ -1,0 +1,33 @@
+#!/usr/bin/env oyster
+
+import testing
+
+source ../modules/figlet
+
+tests.figlet.font.random() {
+    local result font fonts
+
+    result=$(figlet.font.random)
+    assert $LINENO ${#result[@]} -gt 0
+
+    fonts=(foo bar baz)
+    result=$(figlet.font.random "${fonts[@]}")
+    matched=false
+    for font in "${fonts[@]}"; do
+        if [ "${result}" == "${font}" ]; then
+            matched=true
+            break
+        fi
+    done
+    assert $LINENO ${matched} == true
+}
+
+tests.figlet.print.random() {
+    local result answer
+    result=$(figlet.print.random "oyster script")
+    assert $LINENO -n "${result}"
+
+    result=$(figlet.print.random "oyster script" "hollywood")
+    answer=$(figlet -c -w "$(tput cols)" -f "hollywood" "oyster script")
+    assert $LINENO "${result}" == "${answer}"
+}
