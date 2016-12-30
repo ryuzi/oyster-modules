@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# spinner module for Oyster
+#
+
+# spinner settings
+SPINNER_DELAY=0.5
+SPINNER_WAIT="processing..."
+SPINNER_DONE="done."
+SPINNER_STRING='/-\|'
+
+# show spinner
+spinner() {
+    local pid index
+    pid=$!
+    index=1
+
+    echo -n "${SPINNER_WAIT} "
+    while ps -p ${pid} >/dev/null 2>&1; do
+        printf "\b%s" "${SPINNER_STRING:index++%${#SPINNER_STRING}:1}"
+        sleep ${SPINNER_DELAY}
+    done
+    printf "\b%s\n" "${SPINNER_DONE}"
+}
+
