@@ -4,10 +4,10 @@
 #
 
 # spinner settings
-SPINNER_DELAY=0.5
-SPINNER_WAIT="processing..."
-SPINNER_DONE="done."
-SPINNER_STRING='/-\|'
+SPINNER_DELAY=${SPINNER_DELAY:=0.5}
+SPINNER_WAIT="${SPINNER_WAIT:=processing...}"
+SPINNER_DONE="${SPINNER_DONE:=done.}"
+SPINNER_STRING="${SPINNER_STRING:=/-\|}"
 
 # show spinner
 spinner() {
