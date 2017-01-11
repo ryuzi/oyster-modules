@@ -4,10 +4,10 @@
 #
 
 # spinner settings
-SPINNER_DELAY=${SPINNER_DELAY:=0.5}
-SPINNER_WAIT="${SPINNER_WAIT:=processing...}"
-SPINNER_DONE="${SPINNER_DONE:=done.}"
-SPINNER_STRING="${SPINNER_STRING:=/-\|}"
+SPINNER_DELAY=${SPINNER_DELAY:-0.5}
+SPINNER_WAIT_MESSAGE="${SPINNER_WAIT_MESSAGE:-processing...}"
+SPINNER_DONE_MESSAGE="${SPINNER_DONE_MESSAGE:-done.}"
+SPINNER_STRING="${SPINNER_STRING:-/-\|}"
 
 # show spinner
 spinner() {
@@ -15,11 +15,11 @@ spinner() {
     pid=$!
     index=1
 
-    echo -n "${SPINNER_WAIT} "
+    echo -n "${SPINNER_WAIT_MESSAGE} "
     while ps -p ${pid} >/dev/null 2>&1; do
         printf "\b%s" "${SPINNER_STRING:index++%${#SPINNER_STRING}:1}"
-        sleep ${SPINNER_DELAY}
+        sleep "${SPINNER_DELAY}"
     done
-    printf "\b%s\n" "${SPINNER_DONE}"
+    printf "\b%s\n" "${SPINNER_DONE_MESSAGE}"
 }
 
