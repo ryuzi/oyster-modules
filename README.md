@@ -27,12 +27,15 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ryuzi/oyster-modules/maste
 sh -c "$(wget https://raw.githubusercontent.com/ryuzi/oyster-modules/master/install -O -)"
 ```
 
-Then add the following settings for Oyster Modules to your `$HOME/.oysterc` file:
+Then add the following settings to your `$HOME/.oysterc` file:
 ```
 export OYST_MODULE_PATH=$HOME/.oyster-modules
 ```
 
-And reloading file using command `source $HOME/.oysterc`.
+And reloading file using command:
+```shell
+$ source $HOME/.oysterc
+```
 
 
 ## Using Oyster Modules
