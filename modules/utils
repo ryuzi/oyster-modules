@@ -17,7 +17,7 @@ is_empty() {
 
 # check pipe stdin
 is_pipe() {
-	test -p "/dev/stdin"
+    test -p "/dev/stdin"
 }
 
 # Strip whitespace, tab, new-line, carriage-return
@@ -30,8 +30,8 @@ trim() {
 
 # replace variable
 replace() {
-	local variable search replace
-	if [ $# -eq 2 ]; then
+    local variable search replace
+    if [ $# -eq 2 ]; then
         read -r variable < /dev/stdin
         search="$1"
         replace="$2"
